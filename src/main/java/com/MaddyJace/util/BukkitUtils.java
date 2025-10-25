@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
  * 提供与玩家背包相关的辅助方法，例如获取背包空格数量等。
  * </p>
  */
-public class InventoryUtils {
+public class BukkitUtils {
 
     /**
      * 获取玩家主背包中的空格数量。

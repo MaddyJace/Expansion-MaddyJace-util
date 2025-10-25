@@ -16,7 +16,7 @@ import java.util.List;
  * <ul>
  *     <li><b>时间计算：</b>基于 {@link TimeUtils}，用于计算日期与时间差。</li>
  *     <li><b>AuthMe：</b>基于 {@link AuthMe} 工具类，用于查询玩家注册信息。</li>
- *     <li><b>Bukkit：</b>基于 {@link InventoryUtils}，用于获取玩家背包信息。</li>
+ *     <li><b>Bukkit：</b>基于 {@link BukkitUtils}，用于获取玩家背包信息。</li>
  * </ul>
  *
  * <p>使用示例：</p>
@@ -33,6 +33,9 @@ import java.util.List;
  *     ─ 计算到下个月指定日期
  *     可用单位: milli, second, minute, hour, day, month, year
  *     %mut_diffMonths.hour."HH:mm:ss".15%
+ *
+ *     ─ 获取今天是星期几
+ *     %mut_getTheWeek%
  *
  *     ─ AuthMe 插件相关
  *     %mut_authMe.registrationDate."yyyy-MM-dd HH:mm:ss"% # 获取注册的时间
@@ -87,7 +90,7 @@ public class ExpansionUtil extends PlaceholderExpansion {
      * <ul>
      *     <li>{@code diffDays / diffWeeks / diffMonths}：调用 {@link TimeUtils}</li>
      *     <li>{@code authMe}：调用 {@link AuthMe}</li>
-     *     <li>{@code bukkit}：调用 {@link InventoryUtils}</li>
+     *     <li>{@code bukkit}：调用 {@link BukkitUtils}</li>
      * </ul>
      *
      * <p>支持通过引号避免参数中 “.” 被错误分割。</p>
@@ -150,8 +153,10 @@ public class ExpansionUtil extends PlaceholderExpansion {
                 }
             case "BUKKIT":
                 if (list.size() >= 2 && list.get(1).equalsIgnoreCase("emptySlots")) {
-                    return String.valueOf(InventoryUtils.getEmptySlots(player));
+                    return String.valueOf(BukkitUtils.getEmptySlots(player));
                 }
+            case "GETTHEWEEK":
+                return TimeUtils.getTheWeek();
         }
 
         return "The parameter you entered does not exist.";

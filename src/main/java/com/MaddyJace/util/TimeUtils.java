@@ -1,7 +1,9 @@
 package com.MaddyJace.util;
 
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -155,6 +157,11 @@ public class TimeUtils {
             case "YEAR":   return millis / (1000L * 60 * 60 * 24 * 365); // 按 365 天一年估算
             default:       return -1;
         }
+    }
+
+    public static String getTheWeek() {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE", Locale.ENGLISH);
+        return sdf.format(new Date());
     }
 
 }
