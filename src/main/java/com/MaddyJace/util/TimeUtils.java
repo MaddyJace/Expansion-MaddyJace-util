@@ -99,7 +99,6 @@ public class TimeUtils {
 
 
         LocalDateTime targetDateTime = LocalDateTime.of(targetDate, targetTime);
-        System.out.println(targetDateTime);
         long diffMillis = Duration.between(now, targetDateTime).toMillis();
 
         return unitConversion(diffMillis, unit);
