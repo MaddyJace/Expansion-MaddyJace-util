@@ -185,6 +185,9 @@ public class ExpansionUtil extends PlaceholderExpansion {
                     if (list.get(1).equalsIgnoreCase("itemInHandAmount")) {
                         return String.valueOf(ItemUtils.getItemAmount(player));
                     }
+                    if (list.get(1).equalsIgnoreCase("itemInHandEnchanted")) {
+                        return String.valueOf(ItemUtils.isItemEnchanted(player));
+                    }
                 }
             case "GETTHEWEEK":
                 return TimeUtils.getTheWeek();
