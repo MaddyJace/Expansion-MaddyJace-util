@@ -1,10 +1,14 @@
 package com.MaddyJace.util;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * PlaceholderAPI 扩展类 —— {@code %mut_*%}。
@@ -46,6 +50,16 @@ import java.util.List;
  *
  *     ─ Bukkit API
  *     %mut_bukkit.emptySlots% # 背包空格(不包括装备栏和副手)
+ *     %mut_bukkit.playerOnline.[playerName]% # 玩家在线
+ *     %mut_bukkit.itemInHand%            主手物品材质
+ *     %mut_bukkit.itemInHandName%       # 主手物品名称(本地化)
+ *     %mut_bukkit.itemInHandCustomName% # 主手物品自定义名称(本地化)
+ *     %mut_bukkit.itemInHandAmount%     # 主手物品数量
+ *     %mut_bukkit.itemInHandEnchanted%  # 主手物品是否为附魔
+ *
+ *     - LuckPerms
+ *     %mut_luckPermsExpiryTime."{}"% # 把LuckPerms过期时间解析为天(四舍五入)
+ *
  * </pre>
  */
 @SuppressWarnings("unused")
@@ -127,7 +141,7 @@ public class ExpansionUtil extends PlaceholderExpansion {
                     } catch (Exception e) {
                         month = 31;
                     }
-                    return String.valueOf(TimeUtils.diffMonth(list.get(2), month, list.get(2)));
+                    return String.valueOf(TimeUtils.diffMonth(list.get(2), month, list.get(1)));
                 }
             case "AUTHME":
 
@@ -152,11 +166,35 @@ public class ExpansionUtil extends PlaceholderExpansion {
                     }
                 }
             case "BUKKIT":
-                if (list.size() >= 2 && list.get(1).equalsIgnoreCase("emptySlots")) {
-                    return String.valueOf(BukkitUtils.getEmptySlots(player));
+                if (list.size() >= 3 && list.get(1).equalsIgnoreCase("playerOnline")) {
+                    return String.valueOf(Bukkit.getOnlinePlayers().contains(player));
+                }
+                if (list.size() >= 2) {
+                    if (list.get(1).equalsIgnoreCase("emptySlots")) {
+                        return String.valueOf(BukkitUtils.getEmptySlots(player));
+                    }
+                    if (list.get(1).equalsIgnoreCase("itemInHand")) {
+                        return ItemUtils.getItemMaterial(player);
+                    }
+                    if (list.get(1).equalsIgnoreCase("itemInHandName")) {
+                        return ItemUtils.getItemLocalizedName(player);
+                    }
+                    if (list.get(1).equalsIgnoreCase("itemInHandCustomName")) {
+                        return ItemUtils.getItemDisplayName(player);
+                    }
+                    if (list.get(1).equalsIgnoreCase("itemInHandAmount")) {
+                        return String.valueOf(ItemUtils.getItemAmount(player));
+                    }
                 }
             case "GETTHEWEEK":
                 return TimeUtils.getTheWeek();
+
+            case "LUCKPERMSEXPIRYTIME":
+                if (list.size() >= 2) {
+                    String str = PlaceholderAPI.setPlaceholders(player, list.get(1).replace("{", "%"));
+                    return String.valueOf(DurationParser.parseToDays(str));
+                }
+                return "-1";
         }
 
         return "The parameter you entered does not exist.";
@@ -186,6 +224,22 @@ public class ExpansionUtil extends PlaceholderExpansion {
             parts.add(part);
         }
         return parts;
+    }
+
+    /**
+     * 解析占位符中内部的站位，递归解析从最里面开始！<p>
+     */
+    public static String parseAndReplace(String str, Player player) {
+        Pattern pattern = Pattern.compile("(?<!\\\\)\\{([^{}]*)}");
+        Matcher matcher = pattern.matcher(str);
+        while (matcher.find()) {
+            String inner = matcher.group(1); // 提取 {}
+            String replacement = PlaceholderAPI.setPlaceholders(player, "%" + inner + "%");
+            str = str.substring(0, matcher.start()) + replacement + str.substring(matcher.end());
+            matcher = pattern.matcher(str);
+        }
+        str = str.replaceAll("\\\\([{}])", "$1");
+        return str.replace("&", "§");
     }
 
 }

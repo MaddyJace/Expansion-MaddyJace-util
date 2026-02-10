@@ -1,5 +1,6 @@
 package com.MaddyJace.util;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -31,6 +32,13 @@ public class BukkitUtils {
             if (item == null || item.getType() == Material.AIR) emptySlots++;
         }
         return emptySlots;
+    }
+
+    /** 通过字符串名称判断玩家是否在线！ */
+    public static boolean isPlayerOnline(String name) {
+        Player player = Bukkit.getPlayer(name);
+        if (player == null) return false;
+        return player.isOnline();
     }
 
 }

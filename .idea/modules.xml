@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Expansion-MaddyJace-util.iml" filepath="$PROJECT_DIR$/Expansion-MaddyJace-util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Expansion-MaddyJace-util.iml" filepath="$PROJECT_DIR$/.idea/Expansion-MaddyJace-util.iml" />
     </modules>
   </component>
 </project>
